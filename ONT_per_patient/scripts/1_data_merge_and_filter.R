@@ -1,14 +1,15 @@
 # Load required libraries for "1_data_merge_and_filter.R"
 library(tidyverse)
+library(stringr)
 
 # Set working directory
 ## Set working directory to folder ONT_per_patient, to execute all commands without adjusting the paths of the files
 
 # Load in sample info
-sample_info <- read_delim("data/sample_info_complete.txt", delim = "\t")
+sample_info <- read_delim("data/sample_info_ONT_complete_anonymized.txt", delim = "\t")
 
 # Load in merged modbam2bed files with extra column for sample
-bed_full <- read_delim("data/modbam2bed_ONT_per_patient.bed", delim = "\t", col_names = FALSE)
+bed_full <- read_delim("data/modbam2bed_ONT_per_patient_anonymized.bed", delim = "\t", col_names = FALSE)
 
 # Adjust column names of the bed file
 colnames(bed_full) <- c("CHROM", "start", "POS", "modbase", "score", "strand",
@@ -19,11 +20,11 @@ colnames(bed_full) <- c("CHROM", "start", "POS", "modbase", "score", "strand",
 bed_full <- bed_full %>%
   select(CHROM, start, POS, strand, coverage, modpercentage, Ncanonical, Nmodified, sample) %>%
   mutate(POS = case_when(strand == "-" ~ POS - 1,
-                         strand == "+" ~ POS)) %>% 
+                         strand == "+" ~ POS)) %>%
   #change coordinate of the - strand rows, so that they correspond to the + strand and can be merged later
   mutate(start = POS)
 
-# Merging the "-" and "+" strand 
+# Merging the "-" and "+" strand
 bed_strands_merged <- bed_full %>%
   mutate(CHROM = as.numeric(str_remove(CHROM, "chr"))) %>%
   group_by(sample, CHROM, start, POS) %>%
@@ -31,15 +32,15 @@ bed_strands_merged <- bed_full %>%
             Ncan = sum(Ncanonical),
             cov_tot = sum(coverage)) %>%
   mutate(cov_called = Ncan + Nmod,
-         percentage = Nmod / cov_called * 100) %>% 
-  # attention: this percentage is calculated over all bases that have a methylation call. 
+         percentage = Nmod / cov_called * 100) %>%
+  # attention: this percentage is calculated over all bases that have a methylation call.
   # If you want to include the filtered bases in the total, divide by cov_tot
-  mutate(SMA_ID = substr(sample, 1,7),
+  mutate(Anonymized_ID = str_extract(sample, "SMA_\\d{2,3}"),
          tissue = case_when(grepl("fib", sample) ~ "fib",
                             grepl("blood", sample) ~ "blood")) %>%
-  mutate(SMA_ID_tissue = paste(SMA_ID, tissue, sep = "_")) %>%
+  mutate(Anonymized_ID_tissue = paste(Anonymized_ID, tissue, sep = "_")) %>%
   ungroup() %>%
-  left_join(sample_info, by = "SMA_ID") %>%
+  left_join(sample_info, by = "Anonymized_ID") %>%
   mutate(age_at_sampling = case_when(tissue == "fib" ~ age_at_biopsy_years,
                                      tissue == "blood" ~ age_at_EDTA_DNA_years)) %>%
   mutate(age_group = case_when(age_at_sampling < 18 ~ "pediatric",
@@ -47,7 +48,7 @@ bed_strands_merged <- bed_full %>%
 
 # Calculate library size per sample with coverage (total)
 lib_size <- bed_strands_merged %>%
-  group_by(SMA_ID) %>%
+  group_by(Anonymized_ID) %>%
   summarise(lib_size = sum(cov_tot))
 
 # Add library size per SMN copy and other annotation per CpG site
@@ -76,4 +77,3 @@ bed_strands_merged <- bed_strands_merged %>%
                               between(POS, 71409656, 71410119) ~ "SMN_3-UTR_2.1")) %>%
   mutate(Bisulfite_amplicon = case_when(!is.na(PCR_prod) ~ "yes",
                                         is.na(PCR_prod) ~ "no"))
-

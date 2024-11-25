@@ -8,22 +8,22 @@ library(grid)
 
 # Pivot the combined_filtered dataframe to make it suitable for the pheatmap tool.
 combined_data_filtered_pivoted <- combined_data_filtered %>%
-  select(SMA_ID, start, percentage) %>%
+  select(Anonymized_ID, start, percentage) %>%
   pivot_wider(names_from = start, values_from = percentage)
 
 combined_data_filtered_pivoted <- as.data.frame(combined_data_filtered_pivoted)
 
-# Set SMA_ID as rowname and remove the column from dataframe
-rownames(combined_data_filtered_pivoted) <- combined_data_filtered_pivoted$SMA_ID
+# Set Anonymized_ID as rowname and remove the column from dataframe
+rownames(combined_data_filtered_pivoted) <- combined_data_filtered_pivoted$Anonymized_ID
 combined_data_filtered_pivoted <- combined_data_filtered_pivoted %>%
-  select(!SMA_ID)
+  select(!Anonymized_ID)
 combined_data_filtered_pivoted <- as.matrix(combined_data_filtered_pivoted) #convert to matrix for pheatmap
 
 # Create a dataframe that can be used for annotation for rownames in pheatmap
 annotation <- sample_info %>%
-  select(SMA_ID, sex, SMN2_CN, SMA_type_simpl, age_at_sampling_years) #  age_at_sampling_years, age_at_onset_years
+  select(Anonymized_ID, sex, SMN2_CN, SMA_type_simpl, age_at_sampling_years) #  age_at_sampling_years, age_at_onset_years
 annotation <- as.data.frame(annotation)
-rownames(annotation) <- annotation$SMA_ID
+rownames(annotation) <- annotation$Anonymized_ID
 annotation <- annotation[,-1]
 colnames(annotation) <- c("Sex", "SMN2 copy number", "SMA type", "Age at sampling (years)")
 

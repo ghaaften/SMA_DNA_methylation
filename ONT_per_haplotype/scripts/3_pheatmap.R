@@ -7,7 +7,7 @@ library(grid)
 
 # Pivot dataframe: bed_strands_merged for pheatmap
 combined_data_filtered_pivoted <- bed_strands_merged %>%
-  select(SMA_ID_tissue_hap, start, percentage) %>%
+  select(Anonymized_ID_tissue_hap, start, percentage) %>%
   pivot_wider(names_from = start, values_from = percentage)
 
 # Remove haplotypes that have sites with more than 178 NAs (more than 25% of sites)
@@ -21,27 +21,27 @@ combined_data_filtered_pivoted <- combined_data_filtered_pivoted %>%
 # Make matrix from data frame
 combined_data_filtered_pivoted <- as.data.frame(combined_data_filtered_pivoted)
 
-## Use SMA_ID_tissue_hap as rowname
-rownames(combined_data_filtered_pivoted) <- combined_data_filtered_pivoted$SMA_ID_tissue_hap
+## Use Anonymized_ID_tissue_hap as rowname
+rownames(combined_data_filtered_pivoted) <- combined_data_filtered_pivoted$Anonymized_ID_tissue_hap
 
-## Remove SMA_ID_tissue_hap from table
+## Remove Anonymized_ID_tissue_hap from table
 combined_data_filtered_pivoted <- combined_data_filtered_pivoted %>%
-  select(!SMA_ID_tissue_hap)
+  select(!Anonymized_ID_tissue_hap)
 
 ## Convert dataframe to matrix
 combined_data_filtered_pivoted <- as.matrix(combined_data_filtered_pivoted) #convert to matrix for pheatmap
 
 # Make annotation table (rows)
 annotation <- bed_strands_merged %>%
-  select(SMA_ID_tissue_hap, tissue, Sex, downstream_env) %>%
+  select(Anonymized_ID_tissue_hap, tissue, Sex, downstream_env) %>%
   distinct()
 
 annotation <- as.data.frame(annotation)
 
-## Assign SMA_ID_tissue_hap as rowname
-rownames(annotation) <- annotation$SMA_ID_tissue_hap
+## Assign Anonymized_ID_tissue_hap as rowname
+rownames(annotation) <- annotation$Anonymized_ID_tissue_hap
 
-## Remove SMA_ID_tissue_hap from dataframe
+## Remove Anonymized_ID_tissue_hap from dataframe
 annotation <- annotation[,-1]
 
 ## Assign new column names to annotation dataframe 

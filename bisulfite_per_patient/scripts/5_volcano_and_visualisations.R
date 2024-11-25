@@ -104,7 +104,7 @@ mdata_filtered <- mdata %>%
 # Correlation plot
 ## Restructure the data and make a correlation plot, to determine the correlation between all CpG sites
 mdata_filtered_sd_spread <- mdata_filtered %>%
-  select(SMA_ID, POS_ID, percentage) %>%
+  select(Anonymized_ID, POS_ID, percentage) %>%
   spread(key = POS_ID, value = percentage)
 
 ## Remove NAs
@@ -150,7 +150,7 @@ mdata_filtered_mean_correlated_sites_percentage <- mdata_filtered %>%
 
 ### Remove the original columns and pivot the dataframe back
 mdata_filtered_mean_correlated_sites_percentage <- mdata_filtered_mean_correlated_sites_percentage %>%
-  select(SMA_ID, lib_size, SMN_CN_total, lib_size_per_SMN_copy, GQN, SMN1_CN, SMN2_CN, NAIP_CN, mut_859_GC, mut_859_GC_factor, SMN2_RNA, sex, sex_factor, SMA_type, SMA_type_factor, age_at_onset_years, age_at_sampling_years, SMA_type_numeric, CN_minus_type, Concordance, age_group, age_group_factor, chr5_71392849., chr5_71409194., chr5_71409976.) %>%
+  select(Anonymized_ID, lib_size, SMN_CN_total, lib_size_per_SMN_copy, GQN, SMN1_CN, SMN2_CN, NAIP_CN, mut_859_GC, mut_859_GC_factor, SMN2_RNA, sex, sex_factor, SMA_type, SMA_type_factor, age_at_onset_years, age_at_sampling_years, SMA_type_numeric, CN_minus_type, Concordance, age_group, age_group_factor, chr5_71392849., chr5_71409194., chr5_71409976.) %>%
   gather(chr5_71392849., chr5_71409194., chr5_71409976., key = "POS_ID", value = "percentage") %>%
   left_join(sample_info)
 
@@ -179,7 +179,7 @@ summary(check_model$model)
 rm(check_model)
 
 # Run model: test if sites are significantly associated with age
-length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859, !is.na(age_at_sampling_years))$SMA_ID)) #number of samples
+length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859, !is.na(age_at_sampling_years))$Anonymized_ID)) #number of samples
 results_lm_age <- purrr::map_df(
   unique(mdata_filtered_condensed_percentage_no_SMN1_859$POS_ID),
   .f = run_diff_meth,
@@ -265,7 +265,7 @@ ggsave(
 )
 
 # Run model: test if sites are significantly associated with sex (factor)
-length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859, !is.na(sex))$SMA_ID)) #number of samples
+length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859, !is.na(sex))$Anonymized_ID)) #number of samples
 
 results_lm_sex <- purrr::map_df(
   unique(mdata_filtered_condensed_percentage_no_SMN1_859$POS_ID),
@@ -315,7 +315,7 @@ ggsave(
 
 
 # Run model: test if sites are significantly associated with SMN2 copy number
-length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859, !is.na(SMN2_CN))$SMA_ID)) #number of samples
+length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859, !is.na(SMN2_CN))$Anonymized_ID)) #number of samples
 
 results_lm_SMN2_CN <- purrr::map_df(
   unique(mdata_filtered_condensed_percentage_no_SMN1_859$POS_ID),
@@ -364,7 +364,7 @@ ggsave(
 )
 
 # Run model: test if sites are significantly associated with SMA type
-length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859, !is.na(SMA_type_factor))$SMA_ID)) #number of samples
+length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859, !is.na(SMA_type_factor))$Anonymized_ID)) #number of samples
 results_lm_SMA_type <- purrr::map_df(
   unique(mdata_filtered_condensed_percentage_no_SMN1_859$POS_ID),
   .f = run_diff_meth,
@@ -414,7 +414,7 @@ ggsave(
 
 
 # Run model: test if sites are significantly associated with NAIP copy number
-length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859, !is.na(NAIP_CN))$SMA_ID)) #number of samples
+length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859, !is.na(NAIP_CN))$Anonymized_ID)) #number of samples
 results_lm_NAIP_CN <- purrr::map_df(
   unique(mdata_filtered_condensed_percentage_no_SMN1_859$POS_ID),
   .f = run_diff_meth,
@@ -466,7 +466,7 @@ ggsave(
 # Run model: test if sites are significantly associated with SMA type in 3xSMN2 group
 mdata_filtered_condensed_percentage_no_SMN1_859_CN3 <- mdata_filtered_condensed_percentage_no_SMN1_859 %>%
   filter(SMN2_CN == 3)
-length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859_CN3, !is.na(SMA_type_factor))$SMA_ID)) #number of samples
+length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859_CN3, !is.na(SMA_type_factor))$Anonymized_ID)) #number of samples
 results_lm_SMA_type_CN3 <- purrr::map_df(
   unique(mdata_filtered_condensed_percentage_no_SMN1_859_CN3$POS_ID),
   .f = run_diff_meth,
@@ -516,7 +516,7 @@ ggsave(
 # Run model: test if sites are significantly associated with SMA type in 4xSMN2 group
 mdata_filtered_condensed_percentage_no_SMN1_859_CN4 <- mdata_filtered_condensed_percentage_no_SMN1_859 %>%
   filter(SMN2_CN == 4)
-length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859_CN4, !is.na(SMA_type_factor))$SMA_ID)) #number of samples
+length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859_CN4, !is.na(SMA_type_factor))$Anonymized_ID)) #number of samples
 results_lm_SMA_type_CN4 <- purrr::map_df(
   unique(mdata_filtered_condensed_percentage_no_SMN1_859_CN4$POS_ID),
   .f = run_diff_meth,
@@ -565,7 +565,7 @@ ggsave(
 
 
 # Run model: test if sites are significantly associated with age at onset
-length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859, !is.na(age_at_onset_years))$SMA_ID)) #number of samples
+length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859, !is.na(age_at_onset_years))$Anonymized_ID)) #number of samples
 results_lm_age_at_onset <- purrr::map_df(
   unique(mdata_filtered_condensed_percentage_no_SMN1_859$POS_ID),
   .f = run_diff_meth,
@@ -614,7 +614,7 @@ ggsave(
 
 
 # Run model: test if sites are significantly associated with age at onset in 3xSMN2 group
-length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859_CN3, !is.na(age_at_onset_years))$SMA_ID)) #number of samples
+length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859_CN3, !is.na(age_at_onset_years))$Anonymized_ID)) #number of samples
 
 results_lm_age_at_onset_CN3 <- purrr::map_df(
   unique(mdata_filtered_condensed_percentage_no_SMN1_859_CN3$POS_ID),
@@ -665,7 +665,7 @@ ggsave(
 
 
 # Run model: test if sites are significantly associated with age at onset in 4xSMN2 group
-length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859_CN4, !is.na(age_at_onset_years))$SMA_ID)) #number of samples
+length(unique(filter(mdata_filtered_condensed_percentage_no_SMN1_859_CN4, !is.na(age_at_onset_years))$Anonymized_ID)) #number of samples
 results_lm_age_at_onset_CN4 <- purrr::map_df(
   unique(mdata_filtered_condensed_percentage_no_SMN1_859_CN4$POS_ID),
   .f = run_diff_meth,
@@ -717,7 +717,7 @@ ggsave(
 SMN2_RNA_age_graph <- mdata_filtered_condensed_percentage_no_SMN1_859 %>%
   filter(!is.na(SMN2_RNA)) %>%
   filter(SMN2_CN == 3 | SMN2_CN == 4) %>% #only patients with 3 or 4 copies SMN2, because there is barely any data available ofr the two and five copy group (not enough to do good statistics)
-  select(SMA_ID, SMN2_CN, age_at_sampling_years, SMN2_RNA, age_group) %>%
+  select(Anonymized_ID, SMN2_CN, age_at_sampling_years, SMN2_RNA, age_group) %>%
   distinct() %>%
   ggplot(aes(x = age_at_sampling_years, y = SMN2_RNA, colour = as.factor(SMN2_CN), fill = as.factor(SMN2_CN))) +
   geom_point(size = 1, alpha = 0.5, stroke = 0) +
@@ -748,7 +748,7 @@ ggsave(
 ## 3xSMN2 copies
 SMN2_RNA_age_CN3 <- mdata_filtered_condensed_percentage_no_SMN1_859 %>%
   filter(!is.na(SMN2_RNA)) %>%
-  select(SMA_ID, sex, SMN2_CN, age_at_sampling_years, SMN2_RNA) %>%
+  select(Anonymized_ID, sex, SMN2_CN, age_at_sampling_years, SMN2_RNA) %>%
   filter(SMN2_CN == 3) %>%
   distinct()
 
@@ -758,7 +758,7 @@ summary(model_age_RNA_CN3)
 ## 4xSMN2 copies
 SMN2_RNA_age_CN4 <- mdata_filtered_condensed_percentage_no_SMN1_859 %>%
   filter(!is.na(SMN2_RNA)) %>%
-  select(SMA_ID, SMN2_CN, age_at_sampling_years, SMN2_RNA) %>%
+  select(Anonymized_ID, SMN2_CN, age_at_sampling_years, SMN2_RNA) %>%
   filter(SMN2_CN == 4) %>%
   distinct()
 model_age_RNA_CN4 <- lm(SMN2_RNA ~ age_at_sampling_years, data = SMN2_RNA_age_CN4)
@@ -952,7 +952,7 @@ mdata_filtered_condensed_percentage_hfmse <- mdata_filtered_condensed_percentage
 # Median age in dHFMSE group
 mdata_filtered_condensed_percentage_hfmse %>%
   filter(!is.na(dHFMSE)) %>%
-  select(SMA_ID, age_at_sampling_years) %>%
+  select(Anonymized_ID, age_at_sampling_years) %>%
   distinct() %>%
   filter(!is.na(age_at_sampling_years)) %>%
   summarise(median_age = median(age_at_sampling_years),
@@ -961,7 +961,7 @@ mdata_filtered_condensed_percentage_hfmse %>%
 
 # Determine and plot baseline scores
 HFMSE_baseline_scores <- mdata_filtered_condensed_percentage_hfmse %>%
-  select(SMA_ID, HFMSE_baseline, dHFMSE, SMN2_CN, HFMSE_response_group) %>%
+  select(Anonymized_ID, HFMSE_baseline, dHFMSE, SMN2_CN, HFMSE_response_group) %>%
   filter(!is.na(dHFMSE)) %>%
   distinct() %>%
   ggplot(aes(x = HFMSE_baseline, y = dHFMSE, colour = as.factor(SMN2_CN), fill = as.factor(SMN2_CN))) +
@@ -995,7 +995,7 @@ ggsave(
 )
 
 # Run model: test if sites are significantly associated with HFMSE response
-length(unique(filter(mdata_filtered_condensed_percentage_hfmse, !is.na(dHFMSE))$SMA_ID))
+length(unique(filter(mdata_filtered_condensed_percentage_hfmse, !is.na(dHFMSE))$Anonymized_ID))
 
 results_lm_HFMSE <- purrr::map_df(
   unique(mdata_filtered_condensed_percentage_hfmse$POS_ID),
@@ -1101,3 +1101,4 @@ rm(SMN2_RNA_age_CN4)
 rm(SMN2_RNA_age_graph)
 rm(model_age_RNA_CN3)
 rm(model_age_RNA_CN4)
+

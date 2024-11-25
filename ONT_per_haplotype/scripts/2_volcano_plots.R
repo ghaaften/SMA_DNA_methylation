@@ -165,8 +165,8 @@ ggsave(
 )
 
 # Report number of haplotypes per downstream environment in blood
-length(unique(filter(filter(mdata, tissue == "blood"), downstream_env == "SMN1")$SMA_ID_tissue_hap))
-length(unique(filter(filter(mdata, tissue == "blood"), downstream_env == "SMN2")$SMA_ID_tissue_hap))
+length(unique(filter(filter(mdata, tissue == "blood"), downstream_env == "SMN1")$Anonymized_ID_tissue_hap))
+length(unique(filter(filter(mdata, tissue == "blood"), downstream_env == "SMN2")$Anonymized_ID_tissue_hap))
 
 # Create vector with sites that are significant
 significant_sites_downstream_env_factor_blood <- unique(filter(results_lm_downstream_env_factor_blood, Padj_fdr < 0.01)$site)
@@ -264,8 +264,8 @@ ggsave(
 )
 
 # Report number of haplotypes per downstream environment in blood
-length(unique(filter(filter(mdata, tissue == "fib"), downstream_env == "SMN1")$SMA_ID_tissue_hap))
-length(unique(filter(filter(mdata, tissue == "fib"), downstream_env == "SMN2")$SMA_ID_tissue_hap))
+length(unique(filter(filter(mdata, tissue == "fib"), downstream_env == "SMN1")$Anonymized_ID_tissue_hap))
+length(unique(filter(filter(mdata, tissue == "fib"), downstream_env == "SMN2")$Anonymized_ID_tissue_hap))
 
 # Create vector with sites that are significant
 significant_sites_downstream_env_factor_fib <- unique(filter(results_lm_downstream_env_factor_fib, Padj_fdr < 0.01)$site)

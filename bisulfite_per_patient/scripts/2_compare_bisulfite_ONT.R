@@ -3,6 +3,7 @@
 # Load the required libraries
 library(tidyverse)
 library(ggpubr)
+library(stringr)
 
 # Calculate coverage per site
 cov_plot <- combined_data_filtered %>%
@@ -77,32 +78,32 @@ rm(call_rate_table)
 rm(call_rate_plot)
 
 # Load ONT data table
-ONT_data_available <- read_delim("data/ONT_data_available.txt", delim = "\t")
+ONT_data_available <- read_delim("data/ONT_data_available_anonymized.txt", delim = "\t")
 ONT_data_available_blood <- ONT_data_available %>%
   filter(blood_ONT_data_SMN_locus == "Yes")
 
 # Get metrics of the dataset:
 ## total number of patients in ONT dataset, returns 29
-length(unique(ONT_data_available$SMA_ID))
+length(unique(ONT_data_available$Anonymized_ID))
 ## total number of patients in bisulfite data, returns 365
-length(unique(combined_data_filtered$SMA_ID))
+length(unique(combined_data_filtered$Anonymized_ID))
 ## number of patients that overlap between ONT and bisulfite, returns 24
-length(intersect(ONT_data_available$SMA_ID, combined_data_filtered$SMA_ID))
+length(intersect(ONT_data_available$Anonymized_ID, combined_data_filtered$Anonymized_ID))
 ## patients in ONT dataset but not in bisulfite dataset, returns 5
-length(setdiff(ONT_data_available$SMA_ID, combined_data_filtered$SMA_ID))
+length(setdiff(ONT_data_available$Anonymized_ID, combined_data_filtered$Anonymized_ID))
 ## total number of patients when combining ONT and bisulfite data, returns 370
-length(union(ONT_data_available$SMA_ID, combined_data_filtered$SMA_ID))
+length(union(ONT_data_available$Anonymized_ID, combined_data_filtered$Anonymized_ID))
 ## number of blood samples that overlap between ONT and bisulfite, returns 9
-length(intersect(ONT_data_available_blood$SMA_ID, combined_data_filtered$SMA_ID))
+length(intersect(ONT_data_available_blood$Anonymized_ID, combined_data_filtered$Anonymized_ID))
 
 # Check similarity between ONT and bisulfite data
 ## Reform bisulfite data
 bisulfite_methylation_blood <- combined_data_filtered %>%
-  select(SMA_ID, start, percentage) %>%
-  filter(SMA_ID %in% intersect(ONT_data_available_blood$SMA_ID, combined_data$SMA_ID)) %>%
+  select(Anonymized_ID, start, percentage) %>%
+  filter(Anonymized_ID %in% intersect(ONT_data_available_blood$Anonymized_ID, combined_data$Anonymized_ID)) %>%
   mutate(technique = "bisulfite")
 ## Load in ONT methylation percentages for blood samples
-ONT_bed_full <- read_delim("data/modbam2bed_all_samples_merged.bed", delim = "\t", col_names = FALSE) #load full modbam2bed output
+ONT_bed_full <- read_delim("data/modbam2bed_ONT_per_patient_anonymized.bed", delim = "\t", col_names = FALSE) #load full modbam2bed output
 
 ## Change column names of ONT_bed_full
 colnames(ONT_bed_full) <- c("CHROM", "start", "POS", "modbase", "score", "strand",
@@ -116,7 +117,7 @@ ONT_bed_full_blood <- ONT_bed_full %>%
   filter(grepl("blood", sample)) %>% 
   mutate(POS = case_when(strand == "-" ~ POS - 1,
                          strand == "+" ~ POS)) %>% #change coordinate of the - strand rows, so that they correspond to the + strand and can be merged later
-  mutate(SMA_ID = substr(sample, 1, 7)) %>%
+  mutate(Anonymized_ID = str_extract(sample, "SMA_\\d{2,3}")) %>%
   mutate(start = POS)
 
 rm(ONT_bed_full)
@@ -124,7 +125,7 @@ rm(ONT_bed_full)
 ## Merge the data from + and - strands to get 1 value for methylation percentage per CpG site
 ONT_bed_strands_merged_blood <- ONT_bed_full_blood %>%
   mutate(CHROM = as.numeric(str_remove(CHROM, "chr"))) %>%
-  group_by(SMA_ID, CHROM, start, POS) %>%
+  group_by(Anonymized_ID, CHROM, start, POS) %>%
   summarise(Nmod = sum(Nmodified),
             Ncan = sum(Ncanonical),
             cov_tot = sum(coverage)) %>%
@@ -132,12 +133,12 @@ ONT_bed_strands_merged_blood <- ONT_bed_full_blood %>%
          percentage = Nmod / cov_called * 100) #attention: this percentage is calculated over all bases that have a methylation call. If you want to include the filtered bases in the total, divide by cov_tot
 rm(ONT_bed_full_blood)
 
-# Ungroup dataframe and filter for SMA_ID in both dataframes available blood and combined_data
+# Ungroup dataframe and filter for Anonymized_ID in both dataframes available blood and combined_data
 ONT_methylation_blood <- ONT_bed_strands_merged_blood %>%
   ungroup() %>%
-  select(SMA_ID, start, percentage) %>%
+  select(Anonymized_ID, start, percentage) %>%
   filter(start %in% bisulfite_methylation_blood$start) %>%
-  filter(SMA_ID %in% intersect(ONT_data_available_blood$SMA_ID, combined_data$SMA_ID)) %>%
+  filter(Anonymized_ID %in% intersect(ONT_data_available_blood$Anonymized_ID, combined_data$Anonymized_ID)) %>%
   mutate(technique = "ONT")
 
 rm(ONT_bed_strands_merged_blood)
@@ -150,7 +151,7 @@ ONT_bisulfite_comparison_spread <- ONT_bisulfite_comparison %>%
   filter(!is.na(ONT) & !is.na(bisulfite))
 
 ONT_bisulfite_correlation <- ONT_bisulfite_comparison_spread %>%
-  ggplot(aes(x = ONT, y = bisulfite)) + #, colour = SMA_ID
+  ggplot(aes(x = ONT, y = bisulfite)) + 
   geom_point(size = 1, alpha = 0.5, stroke = 0) +
   stat_smooth(colour = "black", method = "lm", linewidth = 0.5) +
   xlab("ONT methylation percentage (%)") +

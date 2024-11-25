@@ -9,20 +9,19 @@
 library(tidyverse)
 library(FactoMineR)
 library(factoextra)
-library(corrplot)
 
 # PCA plot male vs female
 mdata_sex_pivoted <- mdata_filtered_condensed_percentage_no_SMN1_859 %>%
   filter(sex == "M" | sex == "F") %>%
-  select(SMA_ID, POS_ID, percentage) %>%
+  select(Anonymized_ID, POS_ID, percentage) %>%
   pivot_wider(names_from = POS_ID, values_from = percentage) %>%
-  left_join(distinct(select(mdata_filtered_condensed_percentage_no_SMN1_859, SMA_ID, sex)))
+  left_join(distinct(select(mdata_filtered_condensed_percentage_no_SMN1_859, Anonymized_ID, sex)))
 
 ## Pivot and change rownames to prepare for PCA
 mdata_sex_pivoted <- as.data.frame(mdata_sex_pivoted)
-rownames(mdata_sex_pivoted) <- mdata_sex_pivoted$SMA_ID
+rownames(mdata_sex_pivoted) <- mdata_sex_pivoted$Anonymized_ID
 mdata_sex_pivoted <- mdata_sex_pivoted %>%
-  select(!SMA_ID)
+  select(!Anonymized_ID)
 
 ## Running PCA and visualizing
 res.pca.sex <- PCA(mdata_sex_pivoted[,-58], graph = FALSE, )
@@ -58,15 +57,15 @@ ggsave(
 # PCA plot age group
 mdata_age_group_pivoted <- mdata_filtered_condensed_percentage_no_SMN1_859 %>%
   filter(age_group == "Pediatric (<18)" | age_group == "Adult (18+)") %>%
-  select(SMA_ID, POS_ID, percentage) %>%
+  select(Anonymized_ID, POS_ID, percentage) %>%
   pivot_wider(names_from = POS_ID, values_from = percentage) %>%
-  left_join(distinct(select(mdata_filtered_condensed_percentage_no_SMN1_859, SMA_ID, age_group)))
+  left_join(distinct(select(mdata_filtered_condensed_percentage_no_SMN1_859, Anonymized_ID, age_group)))
 
 ## Pivot and change rownames to prepare for PCA
 mdata_age_group_pivoted <- as.data.frame(mdata_age_group_pivoted)
-rownames(mdata_age_group_pivoted) <- mdata_age_group_pivoted$SMA_ID
+rownames(mdata_age_group_pivoted) <- mdata_age_group_pivoted$Anonymized_ID
 mdata_age_group_pivoted <- mdata_age_group_pivoted %>%
-  select(!SMA_ID)
+  select(!Anonymized_ID)
 
 ## Running PCA and visualizing
 res.pca.age_group <- PCA(mdata_age_group_pivoted[,-58], graph = FALSE)
@@ -102,15 +101,15 @@ ggsave(
 # PCA plot SMN2 CN
 mdata_SMN2_CN_pivoted <- mdata_filtered_condensed_percentage_no_SMN1_859 %>%
   filter(!is.na(SMN2_CN)) %>%
-  select(SMA_ID, POS_ID, percentage) %>%
+  select(Anonymized_ID, POS_ID, percentage) %>%
   pivot_wider(names_from = POS_ID, values_from = percentage) %>%
-  left_join(distinct(select(mdata_filtered_condensed_percentage_no_SMN1_859, SMA_ID, SMN2_CN)))
+  left_join(distinct(select(mdata_filtered_condensed_percentage_no_SMN1_859, Anonymized_ID, SMN2_CN)))
 
 ## Pivot dataframe and change rownames
 mdata_SMN2_CN_pivoted <- as.data.frame(mdata_SMN2_CN_pivoted)
-rownames(mdata_SMN2_CN_pivoted) <- mdata_SMN2_CN_pivoted$SMA_ID
+rownames(mdata_SMN2_CN_pivoted) <- mdata_SMN2_CN_pivoted$Anonymized_ID
 mdata_SMN2_CN_pivoted <- mdata_SMN2_CN_pivoted %>%
-  select(!SMA_ID)
+  select(!Anonymized_ID)
 
 ## Run PCA and visualize
 res.pca.SMN2_CN <- PCA(mdata_SMN2_CN_pivoted[,-58], graph = FALSE)
@@ -147,15 +146,15 @@ ggsave(
 mdata_SMA_type_pivoted <- mdata_filtered_condensed_percentage_no_SMN1_859 %>%
   filter(!is.na(SMA_type_simpl)) %>%
   filter(SMA_type_simpl != "Presymptomatic") %>%
-  select(SMA_ID, POS_ID, percentage) %>%
+  select(Anonymized_ID, POS_ID, percentage) %>%
   pivot_wider(names_from = POS_ID, values_from = percentage) %>%
-  left_join(distinct(select(mdata_filtered_condensed_percentage_no_SMN1_859, SMA_ID, SMA_type_simpl)))
+  left_join(distinct(select(mdata_filtered_condensed_percentage_no_SMN1_859, Anonymized_ID, SMA_type_simpl)))
 
 ## Pivot dataframe and change rownames
 mdata_SMA_type_pivoted <- as.data.frame(mdata_SMA_type_pivoted)
-rownames(mdata_SMA_type_pivoted) <- mdata_SMA_type_pivoted$SMA_ID
+rownames(mdata_SMA_type_pivoted) <- mdata_SMA_type_pivoted$Anonymized_ID
 mdata_SMA_type_pivoted <- mdata_SMA_type_pivoted %>%
-  select(!SMA_ID)
+  select(!Anonymized_ID)
 
 ## Run PCA and visualize
 res.pca.SMA_type <- PCA(mdata_SMA_type_pivoted[,-58], graph = FALSE)
@@ -196,14 +195,14 @@ mdata_filtered_condensed_percentage_hfmse <- mdata_filtered_condensed_percentage
   filter(SMN2_CN == 3 | SMN2_CN == 4)
 mdata_filtered_condensed_percentage_hfmse_pivoted <- mdata_filtered_condensed_percentage_hfmse %>%
   filter(!is.na(dHFMSE)) %>%
-  select(SMA_ID, POS_ID, percentage) %>%
+  select(Anonymized_ID, POS_ID, percentage) %>%
   pivot_wider(names_from = POS_ID, values_from = percentage) %>%
-  left_join(distinct(select(mdata_filtered_condensed_percentage_hfmse, SMA_ID, HFMSE_response_group)))
+  left_join(distinct(select(mdata_filtered_condensed_percentage_hfmse, Anonymized_ID, HFMSE_response_group)))
 
 mdata_filtered_condensed_percentage_hfmse_pivoted <- as.data.frame(mdata_filtered_condensed_percentage_hfmse_pivoted)
-rownames(mdata_filtered_condensed_percentage_hfmse_pivoted) <- mdata_filtered_condensed_percentage_hfmse_pivoted$SMA_ID
+rownames(mdata_filtered_condensed_percentage_hfmse_pivoted) <- mdata_filtered_condensed_percentage_hfmse_pivoted$Anonymized_ID
 mdata_filtered_condensed_percentage_hfmse_pivoted <- mdata_filtered_condensed_percentage_hfmse_pivoted %>%
-  select(!SMA_ID)
+  select(!Anonymized_ID)
 
 ## Run PCA
 res.pca.dHFMSE <- PCA(mdata_filtered_condensed_percentage_hfmse_pivoted[,-58], graph = FALSE)
@@ -235,3 +234,4 @@ ggsave(
   limitsize = TRUE,
   bg = NULL
 )
+

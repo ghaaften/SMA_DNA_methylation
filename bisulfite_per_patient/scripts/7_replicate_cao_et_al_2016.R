@@ -25,11 +25,11 @@ cao <- combined_data_filtered %>%
   filter(SMA_type_numeric == 1 | SMA_type_numeric == 2 | SMA_type_numeric == 3)
 
 # number of patients with type 1
-length(unique(filter(cao, SMA_type_numeric == 1)$SMA_ID))
+length(unique(filter(cao, SMA_type_numeric == 1)$Anonymized_ID))
 # number of patients with type 2
-length(unique(filter(cao, SMA_type_numeric == 2)$SMA_ID))
+length(unique(filter(cao, SMA_type_numeric == 2)$Anonymized_ID))
 # number of patients with type 3
-length(unique(filter(cao, SMA_type_numeric == 3)$SMA_ID))
+length(unique(filter(cao, SMA_type_numeric == 3)$Anonymized_ID))
 
 cao_plot <- cao %>% ggplot(aes(x = Cao_site, y = percentage, color = as.factor(SMA_type_numeric))) +
   geom_boxplot(outlier.shape = NA) +

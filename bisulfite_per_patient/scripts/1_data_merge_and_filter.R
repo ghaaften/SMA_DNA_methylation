@@ -4,12 +4,13 @@ library(tidyverse)
 # Set working directory to the bisulfite_analysis_R_20241119 folder to use all the paths without changing them
 
 # Load the sample info table
-sample_info <- read_delim("data/sample_info_complete.txt", delim = "\t")
+sample_info <- read_delim("data/sample_info_bisulfite_complete_anonymized.txt", delim = "\t")
 
-# Assign SMA_ID as rownames and check column types
-rownames(sample_info) <- sample_info$SMA_ID
+# Assign Anonymized_ID as rownames and check column types
+rownames(sample_info) <- sample_info$Anonymized_ID
 lapply(sample_info, class)
 
+# If you want to load in the data from the bismark .cov.gz files, make sure these files are present in the following folder: "./data/methylation_cov_gz_files"
 # Make a list of the .cov.gz files that contain the methylation data
 file_list <- list.files(path = "./data/methylation_cov_gz_files",
                         pattern = "*.cov.gz", full.names = TRUE)
@@ -30,16 +31,22 @@ data_list <- lapply(seq_along(file_list), function(i) {
 combined_data <- bind_rows(data_list)
 
 ## Rename column names
-colnames(combined_data) <- c("CHROM", "start", "stop", "percentage", "Me", "Un", "SMA_ID")
+colnames(combined_data) <- c("CHROM", "start", "stop", "percentage", "Me", "Un", "Anonymized_ID")
+
+## Write the table with methylation calls into a txt file, in case you want to load it in directly next time (now hashed out not to overwrite the existing file)
+#write_tsv(combined_data, "data/bisulfite_bismark_methylation_calls.txt")
+
+## Load in a previously generated file containing the bisulfite methylation calls
+combined_data <- read_delim("data/bisulfite_bismark_methylation_calls_anonymized.txt", delim = "\t")
 
 ## Compute library size for each sample
 lib_size <- combined_data %>%
-  group_by(SMA_ID) %>%
+  group_by(Anonymized_ID) %>%
   summarise(lib_size = sum(Me+Un))
 
 # Add library size to the dataframe with the methylation data
 combined_data <- combined_data %>%
-  left_join(lib_size, by = "SMA_ID")
+  left_join(lib_size, by = "Anonymized_ID")
 
 # Add columns to the dataframe and merge with the sample_info table
 combined_data <- combined_data %>%

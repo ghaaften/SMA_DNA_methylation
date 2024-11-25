@@ -237,9 +237,9 @@ ggsave(
 )
 
 # number of patients more severe (blood)
-length(unique(filter(mdata_blood, concordance_binary == "more_severe")$SMA_ID))
+length(unique(filter(mdata_blood, concordance_binary == "more_severe")$Anonymized_ID))
 # number of patients less severe (blood)
-length(unique(filter(mdata_blood, concordance_binary == "less_severe")$SMA_ID))
+length(unique(filter(mdata_blood, concordance_binary == "less_severe")$Anonymized_ID))
 
 # Concordance (fibroblasts) (differential methylation analysis)
 ## Run differentially methylated analysis
@@ -302,9 +302,9 @@ ggsave(
 )
 
 ## number of patients more severe (fibroblasts)
-length(unique(filter(mdata_fib, concordance_binary == "more_severe")$SMA_ID))
+length(unique(filter(mdata_fib, concordance_binary == "more_severe")$Anonymized_ID))
 ## number of patients less severe (fibroblasts)
-length(unique(filter(mdata_fib, concordance_binary == "less_severe")$SMA_ID))
+length(unique(filter(mdata_fib, concordance_binary == "less_severe")$Anonymized_ID))
 
 ## number of CpG sites
 length(unique(mdata$POS_ID))

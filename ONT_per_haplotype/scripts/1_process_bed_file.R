@@ -1,16 +1,17 @@
 # Load required libraries for "1_process_bed_file.R"
 library(tidyverse)
+library(stringr)
 
 # Set working directory to ONT_per_haplotype folder to run all commands without changing file paths
 
 # Load in sample info
-sample_info <- read_delim("data/sample_info_complete.txt", delim = "\t")
+sample_info <- read_delim("data/sample_info_ONT_complete_anonymized.txt", delim = "\t")
 
 # Load in SMN downstream environment info
-hybrid_type_downstream_env <- read_delim("data/downstream_env_per_haplotype.txt", delim = "\t")
+hybrid_type_downstream_env <- read_delim("data/downstream_env_per_haplotype_anonymized.txt", delim = "\t")
 
 # Load in merged modbam2bed files with extra column for sample
-bed_full <- read_delim("data/modbam2bed_ONT_per_haplotype.bed", delim = "\t", col_names = FALSE)
+bed_full <- read_delim("data/modbam2bed_ONT_per_haplotype_anonymized.bed", delim = "\t", col_names = FALSE)
 
 # Adjust column names of bed_full df
 colnames(bed_full) <- c("CHROM", "start", "POS", "modbase", "score", "strand",
@@ -39,7 +40,7 @@ bed_strands_merged <- bed_full %>%
   mutate(percentage = case_when(cov_called <4 ~ NA,
                                     cov_called >=4 ~ percentage)) %>% 
          # change percentage to NA if cov_called is lower than 4
-  mutate(SMA_ID = substr(sample_hap, 1,7),
+  mutate(Anonymized_ID = str_extract(sample_hap, "SMA_\\d{2,3}"),
          tissue = case_when(grepl("fib", sample_hap) ~ "fib",
                             grepl("blood", sample_hap) ~ "blood"),
          hap = case_when(grepl("hap1", sample_hap) ~ "hap1",
@@ -47,10 +48,10 @@ bed_strands_merged <- bed_full %>%
                          grepl("hap3", sample_hap) ~ "hap3",
                          grepl("hap4", sample_hap) ~ "hap4",
                          grepl("hap5", sample_hap) ~ "hap5")) %>%
-  mutate(SMA_ID_tissue_hap = paste(SMA_ID, tissue, hap, sep = "_")) %>%
+  mutate(Anonymized_ID_tissue_hap = paste(Anonymized_ID, tissue, hap, sep = "_")) %>%
   ungroup() %>%
-  left_join(sample_info, by = "SMA_ID") %>%
-  left_join(hybrid_type_downstream_env, by = c("SMA_ID", "tissue", "hap")) %>%
+  left_join(sample_info, by = "Anonymized_ID") %>%
+  left_join(hybrid_type_downstream_env, by = c("Anonymized_ID", "tissue", "hap")) %>%
   mutate(age_at_sampling = case_when(tissue == "fib" ~ age_at_biopsy_years,
                                       tissue == "blood" ~ age_at_EDTA_DNA_years)) %>%
   mutate(age_group = case_when(age_at_sampling < 18 ~ "pediatric",
@@ -58,7 +59,7 @@ bed_strands_merged <- bed_full %>%
 
 # Create lib_size df: calculate library size per sample with cov_tot
 lib_size <- bed_strands_merged %>%
-  group_by(SMA_ID) %>%
+  group_by(Anonymized_ID) %>%
   summarise(lib_size = sum(cov_tot))
 
 # Add library size per SMN copy and other annotation per CpG site

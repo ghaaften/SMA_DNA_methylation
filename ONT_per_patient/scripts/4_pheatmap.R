@@ -7,33 +7,33 @@ library(grid)
 
 # Pivot dataframe bed_strands_merged for pheatmap
 combined_data_filtered_pivoted <- bed_strands_merged %>%
-  select(SMA_ID_tissue, start, percentage) %>%
+  select(Anonymized_ID_tissue, start, percentage) %>%
   pivot_wider(names_from = start, values_from = percentage)
 
 # Return as data frame
 combined_data_filtered_pivoted <- as.data.frame(combined_data_filtered_pivoted)
 
-# Use SMA_ID_tissue as rownames
-rownames(combined_data_filtered_pivoted) <- combined_data_filtered_pivoted$SMA_ID_tissue
+# Use Anonymized_ID_tissue as rownames
+rownames(combined_data_filtered_pivoted) <- combined_data_filtered_pivoted$Anonymized_ID_tissue
 
-# Remove SMA_ID_tissue column, as that column is now used as rowname
+# Remove Anonymized_ID_tissue column, as that column is now used as rowname
 combined_data_filtered_pivoted <- combined_data_filtered_pivoted %>%
-  select(!SMA_ID_tissue)
+  select(!Anonymized_ID_tissue)
 
 # Convert df into matrix
 combined_data_filtered_pivoted <- as.matrix(combined_data_filtered_pivoted)
 
 # Make annotation table for pheatmap (rows)
 annotation <- bed_strands_merged %>%
-  select(SMA_ID_tissue, tissue, Sex, concordance_binary) %>%
+  select(Anonymized_ID_tissue, tissue, Sex, concordance_binary) %>%
   distinct()
 
 annotation <- as.data.frame(annotation)
 
-# Set SMA_ID_tissue as rownames
-rownames(annotation) <- annotation$SMA_ID_tissue
+# Set Anonymized_ID_tissue as rownames
+rownames(annotation) <- annotation$Anonymized_ID_tissue
 
-# Remove SMA_ID_tissue from annotation df
+# Remove Anonymized_ID_tissue from annotation df
 annotation <- annotation[,-1]
 
 # Rename columns of annotation df
@@ -56,7 +56,7 @@ annotation_columns <- as.data.frame(annotation_columns)
 # Set rownames as POS (positions)
 rownames(annotation_columns) <- annotation_columns$POS
 
-# Remove SMA_ID_tissue from annotation_columns df
+# Remove Anonymized_ID_tissue from annotation_columns df
 annotation_columns <- annotation_columns[,-1]
 
 # Rename columns of annotation_columns df

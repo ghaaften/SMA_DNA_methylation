@@ -4,24 +4,23 @@
 library(tidyverse)
 library(FactoMineR)
 library(factoextra)
-library(corrplot)
 
 
 # PCA plot standards vs SMA
 ## Pivot bed_strands_merged
 PCA_pivoted <- bed_strands_merged %>%
-  select(SMA_ID_tissue, POS, percentage) %>%
+  select(Anonymized_ID_tissue, POS, percentage) %>%
   pivot_wider(names_from = POS, values_from = percentage) %>%
-  left_join(distinct(select(bed_strands_merged, SMA_ID_tissue, tissue))) 
+  left_join(distinct(select(bed_strands_merged, Anonymized_ID_tissue, tissue))) 
 
 PCA_pivoted <- as.data.frame(PCA_pivoted)
 
-## Use SMA_ID_tissue as rownames
-rownames(PCA_pivoted) <- PCA_pivoted$SMA_ID_tissue
+## Use Anonymized_ID_tissue as rownames
+rownames(PCA_pivoted) <- PCA_pivoted$Anonymized_ID_tissue
 
-## Remove SMA_ID_tissue column
+## Remove Anonymized_ID_tissue column
 PCA_pivoted <- PCA_pivoted %>%
-  select(!SMA_ID_tissue)
+  select(!Anonymized_ID_tissue)
 
 ## Make PCA analysis (tissue)
 res.pca <- PCA(PCA_pivoted[,-711], graph = FALSE)

@@ -6,7 +6,7 @@ library(table1)
 
 # Create baseline table from the bed_strands_merged dataframe (script: 1_data_merge_and_filter.R)
 baseline_table <- bed_strands_merged %>%
-  select(SMA_ID, SMA_ID_tissue, tissue, Sex, SMN2_CN, SMA_type, SMA_type_ext, age_at_sampling, age_at_onset_years) %>%
+  select(Anonymized_ID, Anonymized_ID_tissue, tissue, Sex, SMN2_CN, SMA_type, SMA_type_ext, age_at_sampling, age_at_onset_years) %>%
   distinct() %>%
   mutate(Total = 1)
 
