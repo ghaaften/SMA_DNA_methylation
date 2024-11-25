@@ -1,0 +1,11 @@
+Anonymized_ID	GQN	SMN1_CN	SMN2_CN	NAIP_CN	sex	SMA_type	age_at_onset_years	age_at_sampling_years	SMN2_RNA	HFMSE_baseline	dHFMSE	HFMSE_response_group	SMN_CN_total	mut_859_GC	mut_859_GC_factor	SMA_type_numeric	SMA_type_simpl	CN_minus_type	Concordance	age_group	sex_factor	age_group_factor	SMA_type_factor
+SMA_990	8.8	0	3	1	M	Type 2a	1	20	0.8452364	2	NA	NA	3	no	1	2	Type 2	1	concordant	Adult (18+)	0	1	1
+SMA_991	6.3	0	3	1	F	Type 2b	1.5	25	1.2356453	NA	NA	NA	3	no	1	2	Type 2	1	concordant	Adult (18+)	1	1	1
+SMA_992	6.7	0	2	0	M	Type 1b	0.3	1	1.0095683	9	0	Stabilization	2	no	1	1	Type 1	1	concordant	Pediatric (<18)	0	0	0
+SMA_993	7.3	0	4	2	F	Type 3a	2	32	0.962562396	NA	NA	NA	4	no	1	3	Type 3	1	concordant	Adult (18+)	1	1	2
+SMA_994	5.5	0	4	2	F	Type 3b	5	41.5	1.147265077	36	3	Increase	4	no	1	3	Type 3	1	concordant	Adult (18+)	1	1	2
+SMA_995	5.7	0	2	0	M	Type 1b	0	10	1.059887006	NA	NA	NA	2	no	1	1	Type 1	1	concordant	Pediatric (<18)	0	0	0
+SMA_996	8.6	0	3	2	F	Type 1c	0.5	9	1.277486911	NA	NA	NA	3	no	1	1	Type 1	2	more_severe	Pediatric (<18)	1	0	0
+SMA_997	4.5	0	3	1	M	Type 3b	12	50	0.84	62	0	Stabilization	3	no	1	3	Type 3	0	less_severe	Adult (18+)	0	1	2
+SMA_998	6.1	0	3	1	M	Type 2b	1.3	48	0.830618893	61	-1	Stabilization	3	no	1	2	Type 2	1	concordant	Adult (18+)	0	1	1
+SMA_999	8.9	0	4	2	F	Type 2a	0.7	4	1.32673454	NA	NA	NA	4	no	1	2	Type 2	2	more_severe	Pediatric (<18)	1	0	1

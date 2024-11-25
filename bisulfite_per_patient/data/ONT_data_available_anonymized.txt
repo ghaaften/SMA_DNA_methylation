@@ -1,0 +1,11 @@
+Anonymized_ID	fibro_ONT_data_SMN_locus	blood_ONT_data_SMN_locus
+SMA_990	No	Yes
+SMA_991	No	Yes
+SMA_992	Yes	Yes
+SMA_993	Yes	Yes
+SMA_994	No	Yes
+SMA_995	No	Yes
+SMA_996	Yes	Yes
+SMA_997	No	Yes
+SMA_998	No	Yes
+SMA_999	No	Yes

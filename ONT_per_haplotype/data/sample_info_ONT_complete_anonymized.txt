@@ -1,0 +1,11 @@
+Anonymized_ID	Sex	SMN1_CN	SMN2_CN	age_at_onset_years	SMA_type	SMA_type_ext	Concordance_phenotype_classic	concordance_binary	fibro_ONT_data_SMN_locus	blood_ONT_data_SMN_locus	age_at_EDTA_DNA_years	age_at_biopsy_years
+SMA_990	M	0	3	1	3	2a	concordant		No	Yes	20	21
+SMA_991	F	0	3	1.5	3	2b	concordant		No	Yes	25	30
+SMA_992	M	0	2	0.3	2	1b	concordant		Yes	Yes	1	3
+SMA_993	F	0	4	2	3	3a	concordant		Yes	Yes	32	32
+SMA_994	F	0	4	5	1	3b	concordant		No	Yes	41.5	45
+SMA_995	M	0	2	0	3	1b	concordant		No	Yes	10	12
+SMA_996	F	0	3	0.5	1	1c	more_severe		Yes	Yes	9	15
+SMA_997	M	0	3	12	3	3b	less_severe		No	Yes	50	50.5
+SMA_998	M	0	3	1.3	2	2b	concordant		No	Yes	48	55
+SMA_999	F	0	4	0.7	2	2a	more_severe		No	Yes	4	6
