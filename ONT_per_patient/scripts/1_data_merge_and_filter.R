@@ -7,6 +7,10 @@ library(stringr)
 
 # Load in sample info
 sample_info <- read_delim("data/sample_info_ONT_complete_anonymized.txt", delim = "\t")
+RNA_expression <- read_delim("data/RNA_protein_all_anonymized.tsv", delim = "\t")
+sample_info <- sample_info %>%
+  left_join(RNA_expression, by = "Anonymized_ID")
+rm(RNA_expression)
 
 # Load in merged modbam2bed files with extra column for sample
 bed_full <- read_delim("data/modbam2bed_ONT_per_patient_anonymized.bed", delim = "\t", col_names = FALSE)
