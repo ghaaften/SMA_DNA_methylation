@@ -109,7 +109,7 @@ mdata_filtered_sd_spread <- mdata_filtered %>%
 
 ## Remove NAs
 mdata_filtered_sd_spread_na_omit <- na.omit(mdata_filtered_sd_spread)
-rownames(mdata_filtered_sd_spread_na_omit) <- mdata_filtered_sd_spread_na_omit[,1]
+rownames(mdata_filtered_sd_spread_na_omit) <- mdata_filtered_sd_spread_na_omit$Anonymized_ID
 mdata_filtered_sd_spread_na_omit <- mdata_filtered_sd_spread_na_omit[,-1]
 mdata_filtered_sd_spread_na_omit %>% cor(method = "spearman") -> sites_corplot
 correlation_plot <- corrplot(sites_corplot, method="circle", type = 'lower', tl.col = 'black', tl.cex = 0.5,
@@ -1044,21 +1044,34 @@ ggsave(
 )
 
 
+# Summary statistics
+summary_stats_bisulfite <- mdata %>%
+  group_by(start) %>%
+  summarise(mean_percentage = mean(percentage),
+            stdev_percentage = sd(percentage),
+            median_percentage = median(percentage),
+            IQR_percentage = IQR(percentage),
+            min_percentage = min(percentage),
+            max_percentage = max(percentage)
+  )
+
+
 #write results in table
+write_tsv(summary_stats_bisulfite, "results_tables/summary_stats_bisulfite.txt")
 write_tsv(results_lm_sex, "results_tables/3C_results_lm_sex.txt")
 write_tsv(results_lm_age, "results_tables/3D_results_lm_age.txt")
 write_tsv(results_lm_SMN2_CN, "results_tables/4C_results_lm_SMN2_CN.txt")
 write_tsv(results_lm_SMA_type, "results_tables/4D_results_lm_SMA_type.txt")
 write_tsv(results_lm_HFMSE, "results_tables/4G_results_lm_HFMSE.txt")
-write_tsv(results_lm_SMN2_FL_RNA, "results_tables/S7C_results_lm_SMN2_FL_RNA.txt")
-write_tsv(results_lm_SMN1_CN, "results_tables/S8A_results_lm_SMN1_CN.txt")
-write_tsv(results_lm_mut_859, "results_tables/S8B_results_lm_mut_859.txt")
-write_tsv(results_lm_NAIP_CN, "results_tables/S9A_results_lm_NAIP_CN.txt")
-write_tsv(results_lm_age_at_onset, "results_tables/S9B_results_lm_age_at_onset.txt")
-write_tsv(results_lm_SMA_type_CN3, "results_tables/S9C_results_lm_SMA_type_CN3.txt")
-write_tsv(results_lm_SMA_type_CN4, "results_tables/S9D_results_lm_SMA_type_CN4.txt")
-write_tsv(results_lm_age_at_onset_CN3, "results_tables/S9E_results_lm_age_at_onset_CN3.txt")
-write_tsv(results_lm_age_at_onset_CN4, "results_tables/S9F_results_lm_age_at_onset_CN4.txt")
+write_tsv(results_lm_SMN2_FL_RNA, "results_tables/S9C_results_lm_SMN2_FL_RNA.txt")
+write_tsv(results_lm_SMN1_CN, "results_tables/S10A_results_lm_SMN1_CN.txt")
+write_tsv(results_lm_mut_859, "results_tables/S10B_results_lm_mut_859.txt")
+write_tsv(results_lm_NAIP_CN, "results_tables/S11A_results_lm_NAIP_CN.txt")
+write_tsv(results_lm_age_at_onset, "results_tables/S11B_results_lm_age_at_onset.txt")
+write_tsv(results_lm_SMA_type_CN3, "results_tables/S11C_results_lm_SMA_type_CN3.txt")
+write_tsv(results_lm_SMA_type_CN4, "results_tables/S11D_results_lm_SMA_type_CN4.txt")
+write_tsv(results_lm_age_at_onset_CN3, "results_tables/S11E_results_lm_age_at_onset_CN3.txt")
+write_tsv(results_lm_age_at_onset_CN4, "results_tables/S11F_results_lm_age_at_onset_CN4.txt")
 
 #clean up variables
 rm(results_lm_sex)
